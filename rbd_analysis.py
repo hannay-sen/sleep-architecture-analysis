@@ -1,18 +1,3 @@
-# ============================================================
-# RBD vs. Healthy Control: Sleep Architecture Analysis
-#  Data source: PhysioNet CAP Sleep Database (annotation .txt files)
-#
-#  HOW TO USE (Google Colab — recommended):
-#   1. Go to https://colab.research.google.com  ->  New notebook
-#   2. Paste this ENTIRE file into one cell
-#   3. Press the play button (or Shift+Enter)
-#   4. Wait ~1-2 min. It downloads the small .txt files, analyzes
-#      them, prints a results table, and shows/saves charts.
-#
-#  It does NOT need the large .edf files. Only the tiny .txt
-#  annotation files, which download in seconds.
-# ============================================================
-
 import urllib.request
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -25,10 +10,8 @@ BASE = "https://physionet.org/files/capslpdb/1.0.0/"
 RBD_IDS      = [f"rbd{i}" for i in range(1, 23)]
 CONTROL_IDS  = [f"n{i}"   for i in range(1, 17)]
 
-
-# ------------------------------------------------------------
 # 1. DOWNLOAD the small annotation (.txt) files
-# ------------------------------------------------------------
+
 def download_txt(subject_id):
     """Download one subject's .txt file. Returns text, or None if it fails."""
     url = BASE + subject_id + ".txt"
@@ -39,10 +22,8 @@ def download_txt(subject_id):
         print(f"  [skip] {subject_id}: {e}")
         return None
 
-
-# ------------------------------------------------------------
 # 2. PARSE a .txt file into its sequence of 30-second epochs
-# ------------------------------------------------------------
+
 def parse_epochs(text):
     """Return a list of sleep-stage labels (one per 30-second epoch)."""
     lines = text.splitlines()
@@ -71,9 +52,8 @@ def parse_epochs(text):
     return stages
 
 
-# ------------------------------------------------------------
 # 3. COMPUTE sleep-architecture metrics for one subject
-# ------------------------------------------------------------
+
 def compute_metrics(stages):
     """Turn a list of epoch stages into summary sleep metrics."""
     if not stages:
@@ -110,9 +90,8 @@ def compute_metrics(stages):
     }
 
 
-# ------------------------------------------------------------
 # 4. RUN the pipeline over all subjects
-# ------------------------------------------------------------
+
 def build_dataset():
     records = []
     for group, ids in [("RBD", RBD_IDS), ("Control", CONTROL_IDS)]:
